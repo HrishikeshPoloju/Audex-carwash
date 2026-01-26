@@ -24,12 +24,12 @@ export default function Navbar() {
         >
             <div className="flex items-center gap-2">
                 <span className="font-orbitron font-bold text-2xl tracking-widest text-white">
-                    PAGANI
+                    PRISTINE
                 </span>
             </div>
 
-            <button className="px-6 py-2 border border-pagani-gold text-pagani-gold font-orbitron text-sm tracking-wider hover:bg-pagani-gold hover:text-pagani-black transition-colors uppercase">
-                Inquire
+            <button className="px-6 py-2 bg-pagani-gold text-black font-orbitron font-bold text-sm tracking-wider hover:bg-white transition-colors uppercase rounded shadow-[0_0_15px_rgba(212,175,55,0.4)]">
+                Start Membership
             </button>
         </motion.nav>
     );

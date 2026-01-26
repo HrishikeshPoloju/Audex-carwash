@@ -1,22 +1,29 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { MotionValue, useMotionValueEvent } from 'framer-motion';
+import { MotionValue, useMotionValueEvent, useTransform, motion } from 'framer-motion';
 
-interface ZondaScrollCanvasProps {
+interface HeroCanvasProps {
     scrollYProgress: MotionValue<number>;
     totalFrames: number;
     imageFolderPath: string;
 }
 
-export default function ZondaScrollCanvas({
+export default function HeroCanvas({
     scrollYProgress,
     totalFrames,
     imageFolderPath,
-}: ZondaScrollCanvasProps) {
+}: HeroCanvasProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [images, setImages] = useState<HTMLImageElement[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
+
+    // Dirt effect opacity: Starts full, fades out by 50% scroll
+    const dirtOpacity = useTransform(scrollYProgress, [0, 0.25, 0.5], [0.8, 0.6, 0]);
+
+    // Foam effect: Flashes briefly between 25-40%
+    const foamOpacity = useTransform(scrollYProgress, [0.25, 0.3, 0.45, 0.5], [0, 0.6, 0.6, 0]);
+    const foamY = useTransform(scrollYProgress, [0.25, 0.5], ["100%", "0%"]);
 
     // Preload images
     useEffect(() => {
@@ -45,20 +52,16 @@ export default function ZondaScrollCanvas({
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
-        // Handle high DPI
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
 
         canvas.width = rect.width * dpr;
         canvas.height = rect.height * dpr;
 
-        // Reset transform to avoid accumulation
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.scale(dpr, dpr);
 
         const img = images[index];
-
-        // Contain logic equivalent to object-fit: contain
         const canvasAspect = rect.width / rect.height;
         const imgAspect = img.width / img.height;
 
@@ -76,37 +79,27 @@ export default function ZondaScrollCanvas({
             offsetY = (rect.height - renderH) / 2;
         }
 
-        // Clear and draw
-        // Note: setting width/height clears canvas automatically but explicit clear is safe
-        // ctx.clearRect(0, 0, rect.width, rect.height); 
-
         ctx.drawImage(img, offsetX, offsetY, renderW, renderH);
     };
 
-    // Subscribe to scroll changes
     useMotionValueEvent(scrollYProgress, "change", (latest) => {
         if (!isLoaded || images.length === 0) return;
-
-        const frameIndex = Math.min(
-            totalFrames - 1,
-            Math.floor(latest * totalFrames)
-        );
-
+        const frameIndex = Math.min(totalFrames - 1, Math.floor(latest * totalFrames));
         requestAnimationFrame(() => drawFrame(frameIndex));
     });
 
-    // Initial draw once loaded
     useEffect(() => {
-        if (isLoaded) {
-            drawFrame(0);
-        }
+        if (isLoaded) drawFrame(0);
     }, [isLoaded]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
-        <canvas
-            ref={canvasRef}
-            className="absolute inset-0 w-full h-full object-contain [mask-image:radial-gradient(circle,black_40%,transparent_100%)] md:[mask-image:radial-gradient(closest-side,black_60%,transparent_100%)]"
-            style={{ zIndex: 0 }}
-        />
+        <div className="absolute inset-0 w-full h-full">
+            {/* Base Canvas - The Car */}
+            <canvas
+                ref={canvasRef}
+                className="absolute inset-0 w-full h-full object-contain [mask-image:radial-gradient(circle,black_40%,transparent_100%)] md:[mask-image:radial-gradient(closest-side,black_60%,transparent_100%)]"
+                style={{ zIndex: 0 }}
+            />
+        </div>
     );
 }
