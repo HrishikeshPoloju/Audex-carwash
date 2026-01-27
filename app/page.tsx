@@ -6,6 +6,8 @@ import Navbar from '@/components/Navbar';
 import HeroCanvas from '@/components/HeroCanvas';
 import ScrollText from '@/components/ScrollText';
 import SubscriptionPlans from '@/components/SubscriptionPlans';
+import LiquidEther from '@/components/LiquidEther';
+import ScrollVelocity from '@/components/ScrollVelocity';
 import {
   TrustBar, AboutSection, ServicesGrid, HowItWorks,
   WhySubscribe, Testimonials, FAQ, Contact, SectionHeader
@@ -36,6 +38,50 @@ export default function Home() {
 
       {/* 2. MAIN CONTENT FLOW */}
       <div className="relative z-20 bg-pagani-black border-t border-white/10">
+
+        {/* Liquid Ether Background Section */}
+        <section className="relative h-[80vh] w-full border-b border-white/10 overflow-hidden font-rajdhani">
+          <LiquidEther />
+
+          <div className="absolute inset-0 flex flex-col items-center justify-between py-24 z-10 pointer-events-none">
+
+            {/* Spacer to push buttons up */}
+            <div className="flex-1" />
+
+            {/* Buttons moved up */}
+            <div className="flex flex-col md:flex-row gap-8 mb-16 pointer-events-auto">
+              <button className="group relative px-8 py-4 bg-pagani-gold overflow-hidden transition-transform duration-300 hover:scale-105 skew-x-[-12deg]">
+                <span className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+                <span className="relative block skew-x-[12deg] font-orbitron font-bold tracking-[0.2em] text-black uppercase">
+                  Book Now
+                </span>
+              </button>
+
+              <button className="group relative px-8 py-4 bg-transparent border border-white/50 hover:border-white overflow-hidden transition-transform duration-300 hover:scale-105 skew-x-[-12deg]">
+                <span className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+                <span className="relative block skew-x-[12deg] font-orbitron font-bold tracking-[0.2em] text-white group-hover:text-black transition-colors duration-300 uppercase">
+                  Contact Us
+                </span>
+              </button>
+            </div>
+
+            {/* Scroll Velocity Text */}
+            <div className="w-full pointer-events-auto mix-blend-overlay opacity-50">
+              <ScrollVelocity
+                texts={[
+                  'Zero water. Full shine.',
+                  'Advanced polymer cleaning.',
+                  'Safe for modern paint systems.'
+                ]}
+                velocity={50}
+                className="text-white font-orbitron top-2"
+              />
+            </div>
+
+            <div className="flex-1" />
+          </div>
+        </section>
+
         <TrustBar />
         <AboutSection />
         <ServicesGrid />
